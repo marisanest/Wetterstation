@@ -1,10 +1,12 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Server {
@@ -22,106 +24,63 @@ public class Server {
 			outputLine = "Bitte gebe ein Datum ein (Format: tt.mm.jj):";
 			out.println(outputLine);
 			
-			String[] csvFile = new String[200];
-			Scanner scanner = new Scanner(new File("/Users/admin/Git/Wetterstation/Temperaturen2.csv"));
-	        scanner.useDelimiter(",");
-	        int i = 0;
-	        while(scanner.hasNext()){
-	        	csvFile[i] = scanner.next();
-	        	i++;
-	        }
-	        scanner.close();
-
-	        String temp = "";
-	        int index = 0;
+			String[] csvArray = parseCSV("/Users/admin/Documents/workspace-java/Wetterstation/Temperaturen.csv");
+			eliminateInvisibles(csvArray);
+	        
 	        inputLine = in.readLine();
-	        
-	        inputLine = inputLine.replaceAll("\\s+","");
-	        inputLine = inputLine.replaceAll("\\n+","");
-	        
-	        System.out.println("INPUTLINE: Länge: "+inputLine.length()+" Inhalt: "+inputLine);
-	        
-			for(int j = 0; j < csvFile.length && csvFile[j] != null && !csvFile[j].equals(inputLine); j++) {
-				
-				csvFile[j] = csvFile[j].replaceAll("\\s+","");
-		        csvFile[j] = csvFile[j].replaceAll("\\n+","");
-		        
-		        System.out.println("CSV-ARRAY: Länge: "+csvFile[j].length()+" Inhalt: "+csvFile[j]);
-		        
-		        index = j;
-			}
-			
-			if(csvFile[index].equals(inputLine)){
-				
-				outputLine = "Bitte gebe ein Uhrzeit ein (Format: ss):";
-				out.println(outputLine);
-				
-				inputLine = in.readLine();
-				System.out.println(inputLine);
-				
-				switch (inputLine){
-					case "0":	temp = csvFile[index+1];
-								break;
-					case "1":	temp = csvFile[index+2];
-								break;
-					case "2":	temp = csvFile[index+3];
-								break;
-					case "3":	temp = csvFile[index+4];
-								break;
-					case "4":	temp = csvFile[index+5];
-								break;
-					case "5":	temp = csvFile[index+6];
-								break;
-					case "6":	temp = csvFile[index+7];
-								break;
-					case "7":	temp = csvFile[index+8];
-								break;
-					case "8":	temp = csvFile[index+9];	
-								break;
-					case "9":	temp = csvFile[index+10];
-								break;
-					case "10":	temp = csvFile[index+11];
-								break;
-					case "11":	temp = csvFile[index+12];
-								break;
-					case "12":	temp = csvFile[index+13];
-								break;
-					case "13":	temp = csvFile[index+14];
-								break;
-					case "14":	temp = csvFile[index+15];
-								break;
-					case "15":	temp = csvFile[index+16];
-								break;
-					case "16":	temp = csvFile[index+17];
-								break;
-					case "17":	temp = csvFile[index+18];
-								break;
-					case "18":	temp = csvFile[index+19];
-								break;
-					case "19":	temp = csvFile[index+20];
-								break;
-					case "20":	temp = csvFile[index+21];
-								break;
-					case "21":	temp = csvFile[index+22];
-								break;
-					case "22":	temp = csvFile[index+23];
-								break;
-					case "23":	temp = csvFile[index+24];
-								break;
-					default: 	break;
-				}
-			} 
-			else {
-				outputLine = "Datum nicht vorhanden!";
-				out.println(outputLine);	
-			}
-			
-			if(temp.equals(""))
-				outputLine = "Uhrzeit nicht vorhanden!";
+	        int index = findIndexWhereEqual(csvArray, inputLine);
+
+			if(index != -1)
+				outputLine = getTemperatures(csvArray, index);
 			else
-				outputLine = "Die Temperatur betraegt: "+temp;
+				outputLine = "Datum nicht vorhanden!";
 			
 			out.println(outputLine);
 		}
+	}
+	
+	private static String[] parseCSV(String filePath) throws FileNotFoundException{
+		
+		ArrayList<String> csvArrayList = new ArrayList<String>();
+
+		Scanner scanner = new Scanner(new File(filePath));
+        
+		scanner.useDelimiter(",");
+		
+		while(scanner.hasNext())
+			csvArrayList.add(scanner.next());
+        
+        scanner.close();
+         
+        return csvArrayList.toArray(new String[csvArrayList.size()]);
+	}
+	
+	private static void eliminateInvisibles(String[] arr){
+		for(int j = 0; j < arr.length; j++) {
+			arr[j] = arr[j].replaceAll("\\s+","");
+			arr[j] = arr[j].replaceAll("\\n+","");
+			arr[j] = arr[j].replaceAll("\\r+","");
+			arr[j] = arr[j].replaceAll("\\t+","");
+			arr[j] = arr[j].replaceAll("\\b+","");
+			arr[j] = arr[j].replaceAll("\\f+","");
+		}
+	}
+	
+	private static int findIndexWhereEqual(String[] arr, String str){
+		int index = -1;
+		for(int j = 0; j < arr.length ; j++) {
+	        if(arr[j].equals(str)){
+	        	index = j;
+	        	break;
+	        }
+		}
+		return index;
+	}
+	
+	private static String getTemperatures(String[] arr, int index){
+		String temp = "";
+		for(int k = 1; k <= 24; k++)
+			temp += arr[index+k]+", ";
+		return temp;
 	}
 }
