@@ -24,7 +24,7 @@ public class Server {
 			outputLine = "Bitte gebe ein Datum ein (Format: tt.mm.jj):";
 			out.println(outputLine);
 			
-			String[] csvArray = parseCSV("/Users/admin/Documents/workspace-java/Wetterstation/Temperaturen.csv");
+			String[] csvArray = parseCSV("Temperaturen.csv");
 			eliminateInvisibles(csvArray);
 	        
 	        inputLine = in.readLine();
