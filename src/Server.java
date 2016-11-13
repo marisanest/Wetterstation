@@ -24,7 +24,7 @@ public class Server {
 			outputLine = "Bitte gebe ein Datum ein (Format: tt.mm.jj):";
 			out.println(outputLine);
 			
-			String[] csvArray = parseCSV("Temperaturen.csv");
+			String[] csvArray = parseCSV("/Users/admin/Documents/workspace-java/Wetterstation/Temperaturen.csv");
 			eliminateInvisibles(csvArray);
 	        
 	        inputLine = in.readLine();
@@ -33,7 +33,7 @@ public class Server {
 			if(index != -1)
 				outputLine = getTemperatures(csvArray, index);
 			else
-				outputLine = "Datum nicht vorhanden!";
+				outputLine = "ERROR: Datum existiert nicht!";
 			
 			out.println(outputLine);
 		}
@@ -45,7 +45,7 @@ public class Server {
 
 		Scanner scanner = new Scanner(new File(filePath));
         
-		scanner.useDelimiter(",");
+		scanner.useDelimiter(";");
 		
 		while(scanner.hasNext())
 			csvArrayList.add(scanner.next());
@@ -80,7 +80,7 @@ public class Server {
 	private static String getTemperatures(String[] arr, int index){
 		String temp = "";
 		for(int k = 1; k <= 24; k++)
-			temp += arr[index+k]+", ";
+			temp += arr[index+k]+"; ";
 		return temp;
 	}
 }

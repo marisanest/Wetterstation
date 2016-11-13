@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class TempClient {
@@ -36,11 +37,11 @@ public class TempClient {
 	    
 	    ArrayList<Integer> temperatures = scannResponse(response);
 	    
-	    if(temperatures.size() == 24)
-	        System.out.println("Client: Durchschnittliche Temperatur " + calcAverage(temperatures));
-	    else 
-	    	System.out.println("Client: Durchschnittliche Temperatur konnte nicht berechnet werden!");
-	    
+	    if(temperatures.size() == 24){
+	    	System.out.println("Client: Durchschnittliche Temperatur " + calcAverage(temperatures));
+	    	System.out.println("Client: Minimal Temperatur " + Collections.min(temperatures));
+	    	System.out.println("Client: Maximal Temperatur " + Collections.max(temperatures));
+	    }
 		socket.close();
 	}
 	
@@ -49,7 +50,7 @@ public class TempClient {
 		Scanner scanner = new Scanner(response);
 	    ArrayList<Integer> temperatures = new ArrayList<Integer>();
 	    
-	    scanner.useDelimiter(",");
+	    scanner.useDelimiter(";");
         
         while(scanner.hasNext()){
         	String str = scanner.next().replaceAll("\\s+","").replaceAll("\\n+","");
