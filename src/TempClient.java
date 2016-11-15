@@ -35,27 +35,29 @@ public class TempClient {
 	    
 	    System.out.println("Server: " + response);
 	    
-	    ArrayList<Integer> temperatures = scannResponse(response);
-	    
-	    if(temperatures.size() == 24){
-	    	System.out.println("Client: Durchschnittliche Temperatur " + calcAverage(temperatures));
-	    	System.out.println("Client: Minimal Temperatur " + Collections.min(temperatures));
-	    	System.out.println("Client: Maximal Temperatur " + Collections.max(temperatures));
+	    if(!response.contains("ERROR")){
+	    	ArrayList<Double> temperatures = scannResponse(response);
+		    
+		    if(temperatures.size() == 24){
+		    	System.out.println("Client: Durchschnittliche Temperatur " + calcAverage(temperatures));
+		    	System.out.println("Client: Minimal Temperatur " + Collections.min(temperatures));
+		    	System.out.println("Client: Maximal Temperatur " + Collections.max(temperatures));
+		    }
 	    }
 		socket.close();
 	}
 	
-	private static ArrayList<Integer> scannResponse(String response) {
+	private static ArrayList<Double> scannResponse(String response) {
 		
 		Scanner scanner = new Scanner(response);
-	    ArrayList<Integer> temperatures = new ArrayList<Integer>();
+	    ArrayList<Double> temperatures = new ArrayList<Double>();
 	    
 	    scanner.useDelimiter(";");
         
         while(scanner.hasNext()){
         	String str = scanner.next().replaceAll("\\s+","").replaceAll("\\n+","");
         	try{
-        		temperatures.add(Integer.parseInt(str));
+        		temperatures.add(Double.parseDouble(str));
         	} catch (Exception e){}
         }
         scanner.close();
@@ -63,7 +65,7 @@ public class TempClient {
         return temperatures;
 	}
 	
-	private static double calcAverage(ArrayList<Integer> temperatures) {
+	private static double calcAverage(ArrayList<Double> temperatures) {
 		double res = 0;
 		
         for(int j = 0; j < temperatures.size(); j++)
