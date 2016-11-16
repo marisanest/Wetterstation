@@ -20,11 +20,11 @@ public class Server {
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		)	
 		{
-			String[] csvArray = parseCSV("/Users/admin/Documents/workspace-java/Wetterstation/Temperaturen.csv");
+			String[] csvArray = parseCSV("/Users/admin/Git/Wetterstation/Temperaturen.csv");
 			eliminateInvisibles(csvArray);
 			
 			String inputLine, outputLine;
-			outputLine = "Bitte gebe ein Datum ein (Format: tt.mm.jj):";
+			outputLine = "Bitte gebe ein Datum ein (Format: tt.mm.jjjj):";
 			out.println(outputLine);
 			
 			inputLine = in.readLine();
@@ -88,7 +88,7 @@ public class Server {
 	private static String getTemperatures(String[] arr, int index) {
 		String temp = "";
 		for(int k = 1; k <= 24; k++)
-			temp += arr[index+k]+"; ";
+			temp += arr[index+k]+", ";
 		return temp;
 	}
 	
@@ -111,7 +111,7 @@ public class Server {
         if(dateParts.size() == 3)
         	if(0 < dateParts.get(0) && dateParts.get(0) < 32)
         		if(0 < dateParts.get(1) && dateParts.get(1) < 13)
-        			if(00 <= dateParts.get(2) && dateParts.get(2) <= 99)
+        			if(1900 <= dateParts.get(2) && dateParts.get(2) <= 2099)
         				return true;
         
         return false; 
@@ -121,7 +121,7 @@ public class Server {
 		Scanner scanner = new Scanner(data);
 	    ArrayList<Double> temperatures = new ArrayList<Double>();
 	    
-	    scanner.useDelimiter(";");
+	    scanner.useDelimiter(",");
         
         while(scanner.hasNext()){
         	String str = scanner.next().replaceAll("\\s+","").replaceAll("\\n+","");

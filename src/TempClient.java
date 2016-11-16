@@ -52,7 +52,7 @@ public class TempClient {
 		Scanner scanner = new Scanner(response);
 	    ArrayList<Double> temperatures = new ArrayList<Double>();
 	    
-	    scanner.useDelimiter(";");
+	    scanner.useDelimiter(",");
         
         while(scanner.hasNext()){
         	String str = scanner.next().replaceAll("\\s+","").replaceAll("\\n+","");
